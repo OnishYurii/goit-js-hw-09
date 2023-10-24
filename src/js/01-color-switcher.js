@@ -6,12 +6,14 @@ let timerId;
 startBtn.addEventListener('click', renderBackground);
 stopBtn.addEventListener('click', () => {
   clearInterval(timerId);
+  startBtn.toggleAttribute('disabled');
 });
 
 function renderBackground() {
   timerId = setInterval(() => {
     body.style.backgroundColor = getRandomHexColor();
   }, 1000);
+  startBtn.toggleAttribute('disabled');
 }
 
 function getRandomHexColor() {
