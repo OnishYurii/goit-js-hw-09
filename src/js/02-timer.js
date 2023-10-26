@@ -1,8 +1,9 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/confetti.css';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-const options = {
+const optionsFlatpickr = {
   altInput: true,
   altFormat: 'F j, Y',
   enableTime: true,
@@ -10,27 +11,46 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
+    date = refs.fp.selectedDates[0];
+    currentTime = Date.now();
+    checkDate(date, currentTime);
   },
 };
-const fp = flatpickr('#datetime-picker', options);
-const startBtn = document.querySelector('button');
-const days = document.querySelector('span[data-days]');
-const hours = document.querySelector('span[data-hours]');
-const minutes = document.querySelector('span[data-minutes]');
-const seconds = document.querySelector('span[data-seconds]');
 
-startBtn.addEventListener('click', startCount);
+const refs = {
+  fp: flatpickr('#datetime-picker', optionsFlatpickr),
+  startBtn: document.querySelector('button'),
+  days: document.querySelector('span[data-days]'),
+  hours: document.querySelector('span[data-hours]'),
+  minutes: document.querySelector('span[data-minutes]'),
+  seconds: document.querySelector('span[data-seconds]'),
+  text: document.querySelector('p[data-text]'),
+};
+
+let date;
+let currentTime;
+
+refs.startBtn.addEventListener('click', startCount);
+
+function checkDate(date, currentTime) {
+  if (date < currentTime) {
+    Notify.warning('Please choose a date in the future');
+  } else {
+    refs.startBtn.removeAttribute('disabled');
+    refs.startBtn.classList.add('active-btn');
+  }
+}
 
 function startCount() {
+  refs.text.classList.remove('ghost');
   const intervalId = setInterval(() => {
-    const date = new Date(fp.selectedDates);
-    const selectedDateInMs = date.getTime();
-    const currentTime = Date.now();
-    const diff = selectedDateInMs - currentTime;
-    console.log(diff);
+    date = refs.fp.selectedDates[0];
+    currentTime = Date.now();
+    const diff = date - currentTime;
     if (diff <= 0) {
       clearInterval(intervalId);
+      refs.text.textContent = 'You did it \u{1F60B}';
+      refs.text.classList.remove('loading');
       return;
     }
     const convertedTimeFromMs = convertMs(diff);
@@ -52,13 +72,13 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-function renderTimer(obj) {
-  days.textContent = addLeadingZero(obj.days);
-  hours.textContent = addLeadingZero(obj.hours);
-  minutes.textContent = addLeadingZero(obj.minutes);
-  seconds.textContent = addLeadingZero(obj.seconds);
-}
-
 function addLeadingZero(value) {
   return value.toString().padStart(2, '0');
+}
+
+function renderTimer(obj) {
+  refs.days.textContent = addLeadingZero(obj.days);
+  refs.hours.textContent = addLeadingZero(obj.hours);
+  refs.minutes.textContent = addLeadingZero(obj.minutes);
+  refs.seconds.textContent = addLeadingZero(obj.seconds);
 }
