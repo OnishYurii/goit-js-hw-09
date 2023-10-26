@@ -34,7 +34,6 @@ function startCount() {
       return;
     }
     const convertedTimeFromMs = convertMs(diff);
-    addLeadingZero(convertedTimeFromMs);
     renderTimer(convertedTimeFromMs);
   }, 1000);
 }
@@ -54,14 +53,12 @@ function convertMs(ms) {
 }
 
 function renderTimer(obj) {
-  days.textContent = obj.days;
-  hours.textContent = obj.hours;
-  minutes.textContent = obj.minutes;
-  seconds.textContent = obj.seconds;
+  days.textContent = addLeadingZero(obj.days);
+  hours.textContent = addLeadingZero(obj.hours);
+  minutes.textContent = addLeadingZero(obj.minutes);
+  seconds.textContent = addLeadingZero(obj.seconds);
 }
 
-function addLeadingZero(obj) {
-  Object.values(obj).forEach(number => {
-    number.toString().number.padStart(2, '0');
-  });
+function addLeadingZero(value) {
+  return value.toString().padStart(2, '0');
 }
