@@ -27,7 +27,7 @@ input:focus {
   color: orange;
 }
 
-button {
+.timer-btn {
   color:rgb(0, 13, 128);
   background-color: gray;
   font-size: 14px;
