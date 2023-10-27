@@ -29,6 +29,7 @@ const refs = {
 
 let date;
 let currentTime;
+let isActive = false;
 
 refs.startBtn.addEventListener('click', startCount);
 
@@ -42,12 +43,17 @@ function checkDate(date, currentTime) {
 }
 
 function startCount() {
+  if (isActive) return;
+  isActive = true;
   refs.text.classList.remove('ghost');
   const intervalId = setInterval(() => {
     date = refs.fp.selectedDates[0];
     currentTime = Date.now();
     const diff = date - currentTime;
+    console.log(diff);
     if (diff <= 0) {
+      if (!isActive) return;
+      isActive = false;
       clearInterval(intervalId);
       refs.text.textContent = 'You did it \u{1F60B}';
       refs.text.classList.remove('loading');

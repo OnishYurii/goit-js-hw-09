@@ -83,7 +83,7 @@ input:focus {
 
 .loading {
   display: inline-block;
-  clip-path: inset(0 1.1ch 0 0);
+  clip-path: inset(0 1.2ch 0 0);
   animation: load 2s steps(6) infinite;
 }
 
